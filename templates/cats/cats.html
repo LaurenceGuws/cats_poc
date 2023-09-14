@@ -1,0 +1,25 @@
+{% extends "index.html" %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cats.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1>Cats Page</h1>
+<p>Welcome to the Cats management page.</p>
+
+<!-- Loop to display cats -->
+{% for cat in cats %}
+    <div class="cat-card" 
+         {% for attribute, value in cat.items() %}
+         data-cat-{{ attribute }}="{{ value }}"
+         {% endfor %}
+    >
+        {% for attribute, value in cat.items() %}
+        <p>{{ attribute }}: {{ value }}</p>
+        {% endfor %}
+    </div>
+{% endfor %}
+
+{% endblock %}

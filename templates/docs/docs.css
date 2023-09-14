@@ -1,0 +1,7 @@
+/* Custom styles for the Cats page */
+
+.cat-card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+}

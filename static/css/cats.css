@@ -1,0 +1,25 @@
+/* Custom styles for the Cats page */
+
+.cat-card {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    width: calc(33% - 40px);
+    display: inline-block;
+    vertical-align: top;
+    background-color: #f9f9f9;
+}
+
+.cat-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.cat-card p {
+    margin: 0;
+    padding: 5px;
+    font-size: 16px;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cat Foster Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <script src="{{ url_for('static', filename='css/cats.js') }}"></script>
+    {% block extra_css %}
+    {% endblock %}  
+</head>
+<body>
+
+    <header>
+        <h1>Cat Foster Home</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('hello_world') }}">Home</a></li>
+            <li><a href="{{ url_for('cats_page') }}">Cats</a></li>
+            <li><a href="{{ url_for('moms_page') }}">Moms</a></li>
+            <li><a href="{{ url_for('deaths_page') }}">Passings</a></li>
+            <li><a href="{{ url_for('vet_visits_page') }}">Vet Visits</a></li>
+            <li><a href="{{ url_for('vet_checks_page') }}">Vet Checks</a></li>
+            <li><a href="{{ url_for('location_moves_page') }}">Location Moves</a></li>
+            <li><a href="{{ url_for('docs_page') }}">Docs</a></li>
+        </ul>
+    </nav>
+
+    {% block content %}
+    <h2>Welcome to the Cat Foster Home Management System</h2>
+    <p>This system helps you manage all aspects of running a Cat Foster Home, from tracking the cats to managing vet visits.</p>
+    {% endblock %}
+
+    <footer>
+        <p>&copy; {{ current_year }} Cat Foster Home</p>
+    </footer>
+
+</body>
+</html>

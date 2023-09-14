@@ -1,0 +1,78 @@
+/* Reset some default browser styles */
+body, h1, h2, h3, ul, p {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    border-bottom: 1px;
+    border-color: #FFB6C1; /* White */
+}
+
+/* Remove margin and padding for the body to make it touch the edges */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #FFB6C1; /* Baby Pink */
+    color: #000000; /* Black */
+    font-family: Arial, sans-serif;
+}
+
+/* Style the header section */
+header {
+    background-color: #FFFFFF; /* White */
+    color: #000000; /* Black */
+    text-align: center;
+    padding: 10px 0;
+}
+
+/* Style the navigation menu */
+nav ul {
+    background-color: #FFFFFF; /* White */
+    overflow: hidden;
+    color: #000000; /* Black */
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px;
+    border-color: #FFB6C1; /* White */
+}
+
+/* New styles for anchor elements inside list items */
+nav ul li a {
+    display: block;
+    padding: 14px 16px;
+    color: #000000; /* Black */
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+/* Add hover effect for anchor elements */
+nav ul li a:hover {
+    background-color: #F2D1D1; /* Lighter Pink */
+}
+
+/* Add click effect for anchor elements */
+nav ul li a:active {
+    box-shadow: 0 0 10px #000000;
+}
+
+/* Style the main content */
+main {
+    text-align: center;
+    margin: 0 auto; 
+    padding: 15px;
+    background-color: transparent; /* White */
+}
+
+/* Style the footer */
+footer {
+    background-color: transparent; /* White */
+    color: #000000; /* Black */
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
