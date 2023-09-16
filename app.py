@@ -1,11 +1,15 @@
+import logging
 from flask import Flask, jsonify, render_template, request
 from flask.cli import with_appcontext
-from setup.db_setup import init_db, get_all_cats, mock_data  # Import the function
+from setup.db_setup import init_db, get_all_cats, mock_data, update_cat_by_name
 from collections import OrderedDict
 from datetime import datetime
 import sqlite3
 
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
 
+# Initialize the Flask application
 app = Flask(__name__)
 app.config['INSTANCE_FOLDER'] = 'instance'
 
@@ -13,39 +17,36 @@ app.config['INSTANCE_FOLDER'] = 'instance'
 @with_appcontext
 def setup():
     """Set up the application."""
-    init_db()  # Call the function
+    logging.debug("Setting up the application...")
+    init_db()
 
 @app.route('/')
 def hello_world():
-    current_year = datetime.now().year  # Get the current year
+    current_year = datetime.now().year
+    logging.debug(f"Rendering index.html with current_year={current_year}")
     return render_template('index.html', current_year=current_year)
-
 
 @app.route('/cats')
 def cats_page():
-    cats = get_all_cats()  # Assume this returns a list of tuples
-    # Convert to a list of dictionaries for better compatibility with the template
-    cats_dict_list = []
-    field_names = ['CatID', 'Name', 'Sex', 'Colour', 'Condition', 'Weight', 'Age', 
-                   'FirstVax', 'SecondVax', 'SteriDue', 'AdoptedDate', 'AdoptedBy', 
-                   'AdopterContact', 'Message', 'ReceivedDate']
-    for cat in cats:
-        cat_dict = OrderedDict(zip(field_names, cat))
-        cats_dict_list.append(cat_dict)
+    logging.debug("Fetching all cats from the database...")
+    cats, field_names = get_all_cats()
+    cats_dict_list = [OrderedDict(zip(field_names, cat)) for cat in cats]
     return render_template('cats/cats.html', cats=cats_dict_list)
-
 
 @app.route('/update_cat', methods=['POST'])
 def update_cat_route():
+    logging.debug("Received POST request to update a cat.")
     cat_data = request.json
+    logging.debug(f"Received data: {cat_data}")  # Debugging line
     cat_name = cat_data.get('cat_name')
     updated_data = {k: v for k, v in cat_data.items() if k != 'cat_name'}
-    result = update_cat_by_name(cat_name, updated_data)  # You'll have to implement update_cat_by_name()
-    if result:
-        return jsonify({"message": "Cat updated successfully"})
-    else:
-        return jsonify({"message": "Failed to update cat"}), 400
+    print(f"cat_name: {cat_name}")
+    print(f"updated_data: {updated_data}")
+    result = update_cat_by_name(cat_name, updated_data)  # Using the imported function
+    return (jsonify({"message": "Cat updated successfully"}), 200) if result else (jsonify({"message": "Failed to update cat"}), 400)
 
+# Additional routes for other functionalities
+# These could be generalized further
 @app.route('/moms')
 def moms_page():
     return render_template('moms/moms.html')
@@ -72,38 +73,8 @@ def docs_page():
 
 @app.route('/mock')
 def mock_data_route():
-    mock_data()  # Call the mock_data function here
+    mock_data()  # Populate the database with mock data
     return "Mock data has been added."
-
-############################################################
-def update_cat_by_name(cat_name, updated_data):
-    try:
-        conn = sqlite3.connect('instance/cats.sqlite')
-        cursor = conn.cursor()
-        
-        update_statements = []
-        values = []
-        
-        for key, value in updated_data.items():
-            db_key = key  # Adjust this line to map JavaScript keys to DB keys, if needed
-            update_statements.append(f"{db_key} = ?")
-            values.append(value)
-        
-        update_str = ", ".join(update_statements)
-        values.append(cat_name)
-        
-        sql_query = f"UPDATE Cats SET {update_str} WHERE Name = ?"
-        cursor.execute(sql_query, values)
-        conn.commit()
-        
-    except sqlite3.Error as e:
-        print(f"SQLite error: {e}")
-        conn.rollback()
-        return False
-    finally:
-        conn.close()
-        
-    return True
 
 
 if __name__ == '__main__':

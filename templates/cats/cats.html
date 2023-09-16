@@ -1,25 +1,30 @@
+{# This template extends the base template 'index.html' and provides additional content and styling specific to the Cats management page. #}
+
 {% extends "index.html" %}
 
+{# This block is for adding extra CSS files to the page. It will be inserted into the corresponding block in the base template. #}
 {% block extra_css %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/cats.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 {% endblock %}
 
+{# This block defines the main content of the Cats management page. #}
 {% block content %}
-<h1>Cats Page</h1>
-<p>Welcome to the Cats management page.</p>
+  <h1>Cats Page</h1>
+  <p>Welcome to the Cats management page.</p>
 
-<!-- Loop to display cats -->
-{% for cat in cats %}
+  {# Loop through each cat in the 'cats' list and display its attributes in a div element. #}
+  {% for cat in cats %}
     <div class="cat-card" 
+         {# Dynamically add data attributes for each cat attribute. #}
          {% for attribute, value in cat.items() %}
          data-cat-{{ attribute }}="{{ value }}"
          {% endfor %}
     >
+        {# Display each cat attribute in a paragraph element. #}
         {% for attribute, value in cat.items() %}
         <p>{{ attribute }}: {{ value }}</p>
         {% endfor %}
     </div>
-{% endfor %}
-
+  {% endfor %}
 {% endblock %}

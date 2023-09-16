@@ -2,7 +2,7 @@ import os
 import sqlite3
 import click
 from flask import current_app
-
+import logging
 
 def init_db():
     instance_path = current_app.config['INSTANCE_FOLDER']
@@ -50,8 +50,13 @@ def get_all_cats():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM Cats")
     cats = cursor.fetchall()
+    
+    # Get the field names from the cursor description
+    field_names = [column[0] for column in cursor.description]
+    
     conn.close()
-    return cats
+    
+    return cats, field_names
 
 
 def add_cat(cat_data):
@@ -64,36 +69,35 @@ def add_cat(cat_data):
 
 
 def update_cat_by_name(cat_name, updated_data):
+    conn = None
     try:
         conn = sqlite3.connect('instance/cats.sqlite')
         cursor = conn.cursor()
         
-        update_statements = []
-        values = []
-        
-        for key, value in updated_data.items():
-            db_key = key
-            update_statements.append(f"{db_key} = ?")
-            values.append(value)
-        
+        update_statements = [f"{key} = ?" for key in updated_data.keys()]
         update_str = ", ".join(update_statements)
+        
+        values = list(updated_data.values())
         values.append(cat_name)
         
         sql_query = f"UPDATE Cats SET {update_str} WHERE Name = ?"
-        print(f"SQL Query: {sql_query}")  # Debugging
-        print(f"Values: {values}")  # Debugging
+        
+        logging.debug(f"SQL Query: {sql_query}")  # Debugging
+        logging.debug(f"Values: {values}")  # Debugging
         
         cursor.execute(sql_query, values)
         conn.commit()
+        return True
         
     except sqlite3.Error as e:
-        print(f"SQLite error: {e}")
-        conn.rollback()
+        logging.error(f"SQLite error: {e}")
+        if conn:
+            conn.rollback()
         return False
     finally:
-        conn.close()
-        
-    return True
+        if conn:
+            conn.close()
+
 
 
 
